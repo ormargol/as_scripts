@@ -1,12 +1,12 @@
 #TODO:
 # Comments.
-# Tests. - FR build & deploy worked!!!
 # sw upgrade using only linux - done with linux tftpd but failed,
 # looks like file was corrupted...why???
 # sw upgrade for xlp.
 # sw upgrade for ninja.
 # print timing and progresses.
 # create title fr_deploy_version - if we do fr build then deploy=build, if we dont do build then deploy is from last build (-1).
+# VER_BUILD_HISTORY_NUM_TAG is confused and can't recognize that we haven't got latest and build based on our code, and also can't deal with other buildmachine not related.
 [[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
 source ~/scripts/build/build_and_run.conf
