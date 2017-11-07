@@ -9,7 +9,7 @@
 # create title fr_deploy_version - if we do fr build then deploy=build, if we dont do build then deploy is from last build (-1).
 [[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
-source ~/scripts/build_and_run.conf
+source ~/scripts/build/build_and_run.conf
 export FR_PATH=$SW_PATH/Infrastructure/Qualcomm/FSM/QCReleases/current/branches/\
 $FR_BRANCH
 export FR_BUILD_SCRIPTS_PATH=$SW_PATH/Infrastructure/Qualcomm/FSM/scripts
