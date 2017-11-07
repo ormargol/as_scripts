@@ -7,6 +7,7 @@
 # sw upgrade for ninja.
 # print timing and progresses.
 # create title fr_deploy_version - if we do fr build then deploy=build, if we dont do build then deploy is from last build (-1).
+[[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
 source ~/scripts/build_and_run.conf
 export FR_PATH=$SW_PATH/Infrastructure/Qualcomm/FSM/QCReleases/current/branches/\
@@ -58,7 +59,6 @@ export VER_BUILD_NUM_MAJOR=$VER_BUILD_HISTORY_NUM_MAJOR
 export VER_BUILD_NUM_TAG="14_"$VER_BUILD_NUM_MAJOR"_"$VER_BUILD_NUM_MINOR"_"$VER_BUILD_NUM_BUILD
 export VER_BUILD_TARGET_PATH=$AIR4G_PATH/target
 export VER_BUILD_LOG_PATH=$LOGS_PATH/build_$VER_BUILD_NUM_TAG.log
-[[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
 function release_permissions_and_exit {
     printf "General: Permissions Releasing Start\n"
