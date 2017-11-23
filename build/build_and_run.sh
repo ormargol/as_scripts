@@ -112,7 +112,7 @@ fi
 
 if $PERFORM_VER_BUILD ; then
     printf "$VER_BUILD_NUM_TAG: Build Start\n"
-    cd $VER_BUILD_TARGET_PATH && sudo ./makever.sh\
+    cd $VER_BUILD_TARGET_PATH && sudo -E ./makever.sh\
             --major=$VER_BUILD_NUM_MAJOR --minor=$VER_BUILD_NUM_MINOR\
             --build=$VER_BUILD_NUM_BUILD --notag --nostore\
             --usebuild=`pwd`/../. > $VER_BUILD_LOG_PATH 2>&1
