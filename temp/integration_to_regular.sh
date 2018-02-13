@@ -1,0 +1,1 @@
+p4 opened -c 194163 | awk '{print $1}' | sed 's/#.*//' | sed 's/\/\/depot/\/home\/omargaliot\/shared\/omargaliot_workspace/g' | xargs -L 1 sh -c 'cp $0 $0.backup; p4 revert $0; p4 edit -c 194163 $0; mv $0.backup $0'
