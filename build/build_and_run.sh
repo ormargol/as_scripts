@@ -115,7 +115,14 @@ if $PERFORM_VER_BUILD ; then
     cd $VER_BUILD_TARGET_PATH && sudo -E ./makever.sh\
             --major=$VER_BUILD_NUM_MAJOR --minor=$VER_BUILD_NUM_MINOR\
             --build=$VER_BUILD_NUM_BUILD --notag --nostore\
-            --usebuild=`pwd`/../. > $VER_BUILD_LOG_PATH 2>&1
+            --usebuild=`pwd`/../.\
+            --bsp=$MAKEVER_PERFORM_BSP_BUILD\
+            --enc2=$MAKEVER_PERFORM_ENC2_BUILD\
+            --clean=$MAKEVER_PERFORM_ENODEB_MAKE_CLEAN\
+            --xlpfdd=$MAKEVER_PERFORM_ENODEB_MAKE_XLPFDD\
+            --xlptdd=$MAKEVER_PERFORM_ENODEB_MAKE_XLPTDD\
+            --fsmfdd=$MAKEVER_PERFORM_ENODEB_MAKE_FSMFDD\
+            --fsmtdd=$MAKEVER_PERFORM_ENODEB_MAKE_FSMTDD > $VER_BUILD_LOG_PATH 2>&1
     if [ "`tail -2 $VER_BUILD_LOG_PATH | head -1`" == "Done!" ]; then
                 printf "$VER_BUILD_NUM_TAG: Build Succeeded!\n\n"
         else
