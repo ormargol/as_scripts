@@ -112,17 +112,33 @@ fi
 
 if $PERFORM_VER_BUILD ; then
     printf "$VER_BUILD_NUM_TAG: Build Start\n"
+    VER_BUILD_FLAGS=""
+    if $MAKEVER_PERFORM_BSP_BUILD ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --bsp"
+    fi
+    if $MAKEVER_PERFORM_ENC2_BUILD ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --enc2"
+    fi
+    if $MAKEVER_PERFORM_ENODEB_MAKE_CLEAN ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --clean"
+    fi
+    if $MAKEVER_PERFORM_ENODEB_MAKE_XLPFDD ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --xlpfdd"
+    fi
+    if $MAKEVER_PERFORM_ENODEB_MAKE_XLPTDD ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --xlptdd"
+    fi
+    if $MAKEVER_PERFORM_ENODEB_MAKE_FSMFDD ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --fsmfdd"
+    fi
+    if $MAKEVER_PERFORM_ENODEB_MAKE_FSMTDD ; then
+        VER_BUILD_FLAGS="$VER_BUILD_FLAGS --fsmtdd"
+    fi
     cd $VER_BUILD_TARGET_PATH && sudo -E ./makever.sh\
             --major=$VER_BUILD_NUM_MAJOR --minor=$VER_BUILD_NUM_MINOR\
             --build=$VER_BUILD_NUM_BUILD --notag --nostore\
             --usebuild=`pwd`/../.\
-            --bsp=$MAKEVER_PERFORM_BSP_BUILD\
-            --enc2=$MAKEVER_PERFORM_ENC2_BUILD\
-            --clean=$MAKEVER_PERFORM_ENODEB_MAKE_CLEAN\
-            --xlpfdd=$MAKEVER_PERFORM_ENODEB_MAKE_XLPFDD\
-            --xlptdd=$MAKEVER_PERFORM_ENODEB_MAKE_XLPTDD\
-            --fsmfdd=$MAKEVER_PERFORM_ENODEB_MAKE_FSMFDD\
-            --fsmtdd=$MAKEVER_PERFORM_ENODEB_MAKE_FSMTDD > $VER_BUILD_LOG_PATH 2>&1
+            $VER_BUILD_FLAGS > $VER_BUILD_LOG_PATH 2>&1
     if [ "`tail -2 $VER_BUILD_LOG_PATH | head -1`" == "Done!" ]; then
                 printf "$VER_BUILD_NUM_TAG: Build Succeeded!\n\n"
         else
