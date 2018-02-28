@@ -1,12 +1,3 @@
-#TODO:
-# Comments.
-# sw upgrade using only linux - done with linux tftpd but failed,
-# looks like file was corrupted...why???
-# sw upgrade for xlp.
-# sw upgrade for ninja.
-# print timing and progresses.
-# create title fr_deploy_version - if we do fr build then deploy=build, if we dont do build then deploy is from last build (-1).
-# VER_BUILD_HISTORY_NUM_TAG is confused and can't recognize that we haven't got latest and build based on our code, and also can't deal with other buildmachine not related.
 [[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
 source ~/scripts/build/build_and_run.conf
@@ -73,43 +64,6 @@ else
     printf "$FR_BRANCH: Deploy Skipped!\n\n"
 fi
 
-if $PERFORM_AIR4G_BUILD ; then
-    printf "$AIR4G_BRANCH: Build Start\n";
-    cd $AIR4G_BUILD_PATH && make verbose=1 > $AIR4G_BUILD_LOG_PATH 2>&1
-    if [ "`tail -3 $AIR4G_BUILD_LOG_PATH | head -1`" ==\
-    "################# Completed making L2 FSM TDD ##############" ]; then
-        printf "$AIR4G_BRANCH: Build Succeeded!\n\n"
-    else
-        printf "$AIR4G_BRANCH: Build Failed!\n\n"
-        release_permissions_and_exit 1
-    fi
-else
-    printf "$AIR4G_BRANCH: Build Skipped!\n\n"
-fi
-
-if $PERFORM_AIR4G_DEPLOY ; then
-    printf "$AIR4G_BRANCH: Deploy Start\n"
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S su ; echo; rm -rf $AIR4G_DEPLOY_MIDDLE_PATH; mkdir\
-            $AIR4G_DEPLOY_MIDDLE_PATH' > /dev/null 2>&1
-    sudo scp -rp -oStrictHostKeyChecking=no -i $LOCAL_SSH_PRIVATE_KEY_PATH\
-            $AIR4G_DEPLOY_SOURCE_PATH\
-            $SETUP_USER@$SETUP_IP:$AIR4G_DEPLOY_MIDDLE_PATH 2>&1 > /dev/null
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S su; echo; for f in `ls $AIR4G_DEPLOY_SOURCE_PATH`;\
-            do chmod `stat -c "%a" /bs/$f`\
-            $AIR4G_DEPLOY_MIDDLE_PATH/$AIR4G_DEPLOY_SOURCE_DIR/$f; done' >\
-            /dev/null 2>&1
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-    sudo -S mv $AIR4G_DEPLOY_MIDDLE_PATH/$AIR4G_DEPLOY_SOURCE_DIR/* /bs/' >\
-    /dev/null 2>&1
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-    sudo -S; sudo busybox reboot'
-    printf "$AIR4G_BRANCH: Deploy Succeeded!\n\n"
-else
-    printf "$AIR4G_BRANCH: Deploy Skipped!\n\n"
-fi
-
 if $PERFORM_VER_BUILD ; then
     printf "$VER_BUILD_NUM_TAG: Build Start\n"
     VER_BUILD_FLAGS=""
@@ -151,25 +105,6 @@ if $PERFORM_VER_BUILD ; then
         fi
 else
     printf "$VER_BUILD_NUM_TAG: Build Skipped!\n\n"
-fi
-
-if $PERFORM_VER_DEPLOY ; then
-    printf "$VER_BUILD_NUM_TAG: Deploy Start\n"
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S /bs/bin/software_upgrade.sh tftp $VER_DEPLOY_TFTP_IP\
-            $VER_BUILD_NUM_TAG/release/fsm.$VER_BUILD_NUM_TAG.enc' > /dev/null\
-            2>&1
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S su; let "nbnk=1-`sudo /bs/bin/set_bank.sh | grep Current |\
-            xargs echo -n | tail -c 1`"; sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S /bs/bin/set_bank.sh $nbnk' > /dev/null 2>&1
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S /bs/bin/set_bank.sh' > /dev/null 2>&1
-    ssh -t $SETUP_USER@$SETUP_IP 'sudo -k; printf "$SETUP_PASSWORD\n" |\
-            sudo -S; sudo busybox reboot' > /dev/null 2>&1
-    printf "$VER_BUILD_NUM_TAG: Deploy Succeeded!\n\n"
-else
-    printf "$VER_BUILD_NUM_TAG: Deploy Skipped!\n\n"
 fi
 
 release_permissions_and_exit 0
