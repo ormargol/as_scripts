@@ -134,11 +134,15 @@ if $PERFORM_VER_BUILD ; then
     if $MAKEVER_PERFORM_ENODEB_MAKE_FSMTDD ; then
         VER_BUILD_FLAGS="$VER_BUILD_FLAGS --fsmtdd"
     fi
+    printf "" > $VER_BUILD_LOG_PATH
+    tail -f $VER_BUILD_LOG_PATH | grep -E "### |\*\*\*\* |error\:|Done\!" &
+    tailpid=$!
     cd $VER_BUILD_TARGET_PATH && sudo -E ./makever.sh\
             --major=$VER_BUILD_NUM_MAJOR --minor=$VER_BUILD_NUM_MINOR\
             --build=$VER_BUILD_NUM_BUILD --notag --nostore\
             --usebuild=`pwd`/../.\
             $VER_BUILD_FLAGS > $VER_BUILD_LOG_PATH 2>&1
+    kill -9 $tailpid
     if [ "`tail -2 $VER_BUILD_LOG_PATH | head -1`" == "Done!" ]; then
                 printf "$VER_BUILD_NUM_TAG: Build Succeeded!\n\n"
         else
