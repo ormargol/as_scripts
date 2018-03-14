@@ -1,6 +1,18 @@
 [[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
-source ~/scripts/build/mkfull.conf
+if [ "$#" -eq 1 ]; then
+  if [ -e "$1" ]; then
+    echo "reading config from received file: $1"
+    source $1
+  else
+    echo "ERROR: argument 1 should be config file, but file doesn't exists"
+    echo "reading config file from default file: ~/scripts/build/mkfull.conf"
+    source ~/scripts/build/mkfull.conf
+  fi
+else
+  echo "reading config from default file: ~/scripts/build/mkfull.conf"
+  source ~/scripts/build/mkfull.conf
+fi
 
 export FR_PATH=$SW_PATH/Infrastructure/Qualcomm/FSM/QCReleases/current/branches/\
 $FR_BRANCH
