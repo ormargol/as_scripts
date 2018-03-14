@@ -1,6 +1,6 @@
 [[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
-source ~/scripts/build/build_and_run.conf
+source ~/scripts/build/mkfull.conf
 
 export FR_PATH=$SW_PATH/Infrastructure/Qualcomm/FSM/QCReleases/current/branches/\
 $FR_BRANCH
