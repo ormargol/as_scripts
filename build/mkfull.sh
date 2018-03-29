@@ -1,3 +1,5 @@
+#This script is in Beta version, please don't use it!
+
 [[ $_ != $0 ]] && printf "%s != %s\n" $_ $0 && return
 
 cd $(dirname $0)
